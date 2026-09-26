@@ -1,5 +1,7 @@
 # High-Fidelity Web Clone
 
+[简体中文](README.zh-CN.md)
+
 A Codex skill for recreating a website's public UI, responsive layouts, and observable interactions with evidence-driven browser validation.
 
 The workflow treats the reference site as a product specification: inventory source when available, capture the browser states that matter, reproduce those states locally, and compare the same routes and input sequences. Source code accelerates the work; runtime browser behavior remains the reference.
