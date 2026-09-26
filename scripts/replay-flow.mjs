@@ -112,6 +112,10 @@ async function main() {
   const flowPath = path.resolve(options.flow);
   const flow = JSON.parse(await fs.readFile(flowPath, 'utf8'));
   if (!flow.url && !flow.route) throw new Error('Flow must include url or route');
+  const startUrl = flow.url || (() => {
+    if (!flow.baseUrl) throw new Error('A relative flow.route requires flow.baseUrl');
+    return new URL(flow.route, flow.baseUrl).href;
+  })();
   const name = String(options.name || path.basename(flowPath, path.extname(flowPath))).replace(/[^a-zA-Z0-9._-]+/g, '-');
   const outputDir = path.resolve(options.out || 'artifacts/replays', name);
   await fs.mkdir(outputDir, { recursive: true });
@@ -137,14 +141,14 @@ async function main() {
   const report = {
     name,
     flow: flowPath,
-    requestedUrl: flow.url || flow.route,
+    requestedUrl: startUrl,
     startedAt: new Date().toISOString(),
     actions: [],
     final: null,
     errors: [],
   };
   try {
-    await page.goto(String(flow.url || flow.route), { waitUntil: 'domcontentloaded', timeout: flow.timeout || 30_000 });
+    await page.goto(startUrl, { waitUntil: 'domcontentloaded', timeout: flow.timeout || 30_000 });
     const readyOptions = {
       ...(flow.ready || {}),
       readySelector: flow.ready?.selector || flow.ready?.readySelector || '[data-page-ready="true"]',

@@ -194,6 +194,8 @@ async function main() {
   const { chromium } = await getPlaywright();
   const harPath = options.har ? outputPath(options.har, path.join(captureDir, 'network.har')) : undefined;
   const tracePath = options.trace ? outputPath(options.trace, path.join(captureDir, 'trace.zip')) : undefined;
+  if (harPath) await fs.mkdir(path.dirname(harPath), { recursive: true });
+  if (tracePath) await fs.mkdir(path.dirname(tracePath), { recursive: true });
   const browser = await chromium.launch({
     headless: !options.headed,
     executablePath: options['executable-path'] || process.env.PLAYWRIGHT_EXECUTABLE_PATH,
@@ -234,7 +236,6 @@ async function main() {
   });
 
   if (tracePath) {
-    await fs.mkdir(path.dirname(tracePath), { recursive: true });
     await context.tracing.start({ screenshots: true, snapshots: true, sources: true });
   }
 
