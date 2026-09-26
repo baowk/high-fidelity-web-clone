@@ -114,3 +114,14 @@ For every unresolved mismatch, record: reference state, clone state, reproductio
 ## Useful tools
 
 Prefer Playwright screenshots, Trace Viewer, HAR recording, browser context isolation, and a pixel-diff tool. Use CDP when Playwright does not expose the needed runtime, network, canvas, or performance evidence. Existing project tooling takes precedence over adding dependencies; do not install a browser merely to run this skill.
+
+## Executable toolkit
+
+This repository includes optional Node helpers for the repeatable parts of the workflow. Read [references/toolkit.md](references/toolkit.md) when the task needs automated evidence rather than a one-off browser inspection.
+
+- `scripts/capture-page.mjs` opens a URL at a fixed viewport, waits for fonts and images, records HTML/ARIA/source inventory/console/network evidence, and writes a screenshot.
+- `scripts/replay-flow.mjs` replays a JSON action sequence in an isolated context and waits for the clone ready checkpoint before each interaction.
+- `scripts/compare-screenshots.mjs` writes a pixel diff and a mismatch ratio that can be checked in CI.
+- `scripts/lib/ready.mjs` is the shared readiness contract. A clone should set `data-page-ready="true"` only after its data and visible UI are ready; the marker remains optional for third-party reference pages.
+
+Use these helpers to create evidence artifacts and reports. They do not replace browser judgment: inspect intermediate states, check geometry and accessibility, and document dynamic or inaccessible resources.

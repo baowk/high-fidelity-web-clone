@@ -45,9 +45,25 @@ For repeatable interaction evidence, use the state record in [`references/state-
 - Do not silently replace unavailable fonts, images, APIs, or interactions with placeholders.
 - Check source and asset licenses before copying or publishing a reproduction.
 
+## Optional executable toolkit
+
+The repository includes small Node helpers for repeatable evidence collection and validation. They use the project's existing Playwright/browser setup and do not download a browser.
+
+```bash
+npm install
+npm run capture -- --url https://example.com --name home --full-page
+npm run replay -- --flow path/to/home-flow.json --trace
+npm run compare -- --reference artifacts/reference/home/screenshot.png \
+  --clone artifacts/clone/home/screenshot.png --fail-ratio 0.01
+```
+
+See [`references/toolkit.md`](references/toolkit.md) for capture output, flow JSON, ready markers, and comparison thresholds.
+
 ## Repository contents
 
 - `SKILL.md` — skill trigger, workflow, acceptance criteria, and operating guidance.
 - `references/state-capture.md` — state inventory and replay record format.
 - `references/source-inventory.md` — HTML/DOM, CSS, JavaScript, asset, and network mapping template.
+- `references/toolkit.md` — executable capture, replay, and screenshot comparison workflow.
+- `scripts/` — optional Playwright capture, flow replay, readiness, and pixel-diff helpers.
 - `agents/openai.yaml` — Codex skill display metadata.
